@@ -1,7 +1,11 @@
 #importing all the modules
 from tkinter import *
-
+from tkinter import ttk
 from PIL import Image,ImageTk
+from pytube import YouTube
+
+#importing local py files
+from youtube_download import download_video
 
 
 
@@ -13,10 +17,13 @@ root.geometry(f"{screen_width}x{screen_height}")
 
 
 """"Dealing with the youtube page"""
+
+style_widget = ttk.Style()
+style_widget.theme_use("xpnative")
 #making the frame
 page_3 = Frame(root)
 page_3.place(relx=0,rely=0,relwidth=1,relheight=1)
-
+page_3.tkraise()
 #setting the background image
 
 #importing the background image
@@ -35,6 +42,14 @@ url_label =Label(page_3,text="Enter the URL here:",font=("Arial",25,"bold"),bg="
 url_label.pack(pady=("10p","3p"))
 url_entry = Entry(page_3,width = 50,font=("Arial",18))
 url_entry.pack(pady=("10p","5p"),ipady=5)
+
+#making combo box for resolution
+resolution = StringVar()
+resolution_option = ["720px","360px","240px"]
+resolution_combobox = ttk.Combobox(page_3,values=resolution_option,textvariable=resolution,font=("Arial",20),height=10)
+resolution_combobox.set("720px")
+resolution_combobox.pack(pady=("30p","5p"))
+
 #making download button
 #importing button image 
 download_button = Image.open(r"photos\download_button.png")
@@ -45,13 +60,17 @@ download_button_image = ImageTk.PhotoImage(download_button_final)
 download_button_button = Button(page_3,image=download_button_image,borderwidth=0)
 download_button_button.pack(pady=("30p","5p"))
 
+#making progress label
+progre_label =Label(page_3,text="0%",font=("Arial",25,"bold"),bg="#FFF6EA")
+progre_label.pack(pady=("10p","3p"))
 
+#making progress bar
+progress_bar = ttk.Progressbar(page_3,length=500,mode = "determinate",value = 20)
+progress_bar.pack(pady=("10p","5p"))
 
-
-
-
-
-
+#Downloaded completed label
+download_complete =Label(page_3,text="Downloaded",font=("Arial",25,"bold"),bg="#FFF6EA")
+progre_label.pack(pady=("10p","3p"))
 
 
 
@@ -124,7 +143,7 @@ resized_bg_image_tk = ImageTk.PhotoImage(resized_bg_image)
 page_1 = Frame(root)
 page_1.place(relx=0, rely=0, relwidth=1, relheight=1)  # Cover the entire root window
 
-page_1.tkraise()
+page_1.tkraise()  #to display it first 
 #making label and setting the image on window
 bg_image_label = Label(page_1,image=resized_bg_image_tk)
 bg_image_label.place(relwidth=1,relheight=1)
