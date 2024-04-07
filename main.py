@@ -10,21 +10,29 @@ from pytube import YouTube
 #working for youtube
 
 
-def download_video():
-    url = url_entry.get()
-    resolution_var = resolution.get()
-
-    progre_label.pack(pady=("10p","5p"))
+def download_youtube_video():
+    progre_label.pack(pady=("10p","5p")) #packing the label and progress bar
     progress_bar.pack(pady=("10p","5p"))
     download_complete.pack(pady =("10p","5p"))
 
+    url = url_entry.get()        #getting the url which is entered in entry box
+    resolution_var = resolution.get()  #getting the resolution from combo box
+
+   
     try:
-        you_tube =YouTube(url)
+
+        you_tube =YouTube(url,on_progress_callback=progress_youtube) #the second one is used to show the progress
         stream_youtube = you_tube.streams.filter(res=resolution_var).first()
         stream_youtube.download()
     except:
-        download_complete.configure(text="Not Downloaded")
+        download_complete.configure(text="Not Downloaded") #if there is issue and that's why the video could not be downloaded then it will show this error
 
+def progress_youtube(stream,chunk,remainning_bytes):
+    complete_size = stream.filesize                     #finding the complete size
+    download_byte = complete_size-remainning_bytes      #because the progress is stored as remainning bytes so finding the downloaded bytes we have to do this
+    percentage_download = download_byte/complete_size*100
+    root.update()                                           
+    print(percentage_download)
 
 
 
@@ -77,7 +85,7 @@ download_button_final = download_button.resize((200,70))
 download_button_image = ImageTk.PhotoImage(download_button_final)
 
 #defining the button and setting its position.
-download_button_button = Button(page_3,image=download_button_image,borderwidth=0,command=download_video)
+download_button_button = Button(page_3,image=download_button_image,borderwidth=0,command=download_youtube_video)
 download_button_button.pack(pady=("30p","5p"))
 
 #making progress label
@@ -87,7 +95,7 @@ progre_label =Label(page_3,text="0%",font=("Arial",25,"bold"),bg="#FFF6EA")
 progress_bar = ttk.Progressbar(page_3,length=500,mode = "determinate",value = 20)
 
 #Downloaded completed label
-download_complete =Label(page_3,text="Downloaded",font=("Arial",25,"bold"),bg="#FFF6EA")
+download_complete =Label(page_3,text="",font=("Arial",25,"bold"),bg="#FFF6EA")
 
 
 
