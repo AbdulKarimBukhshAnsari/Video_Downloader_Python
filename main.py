@@ -2,10 +2,29 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import Image,ImageTk
+import os
 from pytube import YouTube
 
-#importing local py files
-from youtube_download import download_video
+#defining functions
+
+#working for youtube
+
+
+def download_video():
+    url = url_entry.get()
+    resolution_var = resolution.get()
+
+    progre_label.pack(pady=("10p","5p"))
+    progress_bar.pack(pady=("10p","5p"))
+    download_complete.pack(pady =("10p","5p"))
+
+    try:
+        you_tube =YouTube(url)
+        stream_youtube = you_tube.streams.filter(res=resolution_var).first()
+        stream_youtube.download()
+    except:
+        download_complete.configure(text="Not Downloaded")
+
 
 
 
@@ -18,6 +37,7 @@ root.geometry(f"{screen_width}x{screen_height}")
 
 """"Dealing with the youtube page"""
 
+#setting the theme of ttk widgets
 style_widget = ttk.Style()
 style_widget.theme_use("xpnative")
 #making the frame
@@ -45,9 +65,9 @@ url_entry.pack(pady=("10p","5p"),ipady=5)
 
 #making combo box for resolution
 resolution = StringVar()
-resolution_option = ["720px","360px","240px"]
+resolution_option = ["720p","360p","240p"]
 resolution_combobox = ttk.Combobox(page_3,values=resolution_option,textvariable=resolution,font=("Arial",20),height=10)
-resolution_combobox.set("720px")
+resolution_combobox.set("720p")
 resolution_combobox.pack(pady=("30p","5p"))
 
 #making download button
@@ -57,32 +77,17 @@ download_button_final = download_button.resize((200,70))
 download_button_image = ImageTk.PhotoImage(download_button_final)
 
 #defining the button and setting its position.
-download_button_button = Button(page_3,image=download_button_image,borderwidth=0)
+download_button_button = Button(page_3,image=download_button_image,borderwidth=0,command=download_video)
 download_button_button.pack(pady=("30p","5p"))
 
 #making progress label
 progre_label =Label(page_3,text="0%",font=("Arial",25,"bold"),bg="#FFF6EA")
-progre_label.pack(pady=("10p","3p"))
 
 #making progress bar
 progress_bar = ttk.Progressbar(page_3,length=500,mode = "determinate",value = 20)
-progress_bar.pack(pady=("10p","5p"))
 
 #Downloaded completed label
 download_complete =Label(page_3,text="Downloaded",font=("Arial",25,"bold"),bg="#FFF6EA")
-progre_label.pack(pady=("10p","3p"))
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
