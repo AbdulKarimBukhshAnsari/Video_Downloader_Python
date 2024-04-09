@@ -23,7 +23,9 @@ def download_youtube_video():
 
         you_tube =YouTube(url,on_progress_callback=progress_youtube) #the second one is used to show the progress
         stream_youtube = you_tube.streams.filter(res=resolution_var).first()
-        stream_youtube.download()
+        download_path = r"downloads\youtube"
+        stream_youtube.download(output_path= download_path)
+        download_complete.configure(text = "Downloaded")
     except:
         download_complete.configure(text="Not Downloaded") #if there is issue and that's why the video could not be downloaded then it will show this error
 
@@ -31,9 +33,11 @@ def progress_youtube(stream,chunk,remainning_bytes):
     complete_size = stream.filesize                     #finding the complete size
     download_byte = complete_size-remainning_bytes      #because the progress is stored as remainning bytes so finding the downloaded bytes we have to do this
     percentage_download = download_byte/complete_size*100
-    root.update()                                           
-    print(percentage_download)
-
+                                         
+    progre_label.configure(text=str(int(percentage_download))+"%")
+    progre_label.update()
+    progress_bar.configure(value=percentage_download)
+    
 
 
 root =Tk()
@@ -92,7 +96,7 @@ download_button_button.pack(pady=("30p","5p"))
 progre_label =Label(page_3,text="0%",font=("Arial",25,"bold"),bg="#FFF6EA")
 
 #making progress bar
-progress_bar = ttk.Progressbar(page_3,length=500,mode = "determinate",value = 20)
+progress_bar = ttk.Progressbar(page_3,length=500,mode = "determinate",value = 0)
 
 #Downloaded completed label
 download_complete =Label(page_3,text="",font=("Arial",25,"bold"),bg="#FFF6EA")
@@ -102,6 +106,7 @@ download_complete =Label(page_3,text="",font=("Arial",25,"bold"),bg="#FFF6EA")
 """Dealing with category page"""
 
 #importing the background image
+
 bg_image_2 = Image.open(r"photos\category_page_1.png")
 
 #resizing the image so it will be suitable for the window
